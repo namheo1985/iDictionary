@@ -1,0 +1,2 @@
+# iDictionary
+Android Dictionary Application.
