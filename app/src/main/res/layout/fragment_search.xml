@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.neotran.idictionary.MainActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/tool_bar"/>
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_layout_vertical"
+        android:paddingTop="?attr/actionBarSize"
+        android:paddingLeft="@dimen/padding_layout_left"
+        android:paddingRight="@dimen/padding_layout_right"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/padding_layout_vertical"
+            tools:context="com.neotran.idictionary.fragment.SearchFragment">
+
+            <EditText
+                android:id="@+id/search_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="center_vertical"
+                android:layout_toLeftOf="@+id/search_button"
+                android:hint="Enter a word..."
+                android:paddingBottom="@dimen/padding_edittext_bottom"
+                android:singleLine="true"
+                android:textSize="@dimen/text_size_large"/>
+
+            <Button
+                android:id="@+id/search_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/margin_element"
+                android:background="@color/gray"
+                android:text="Search"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/recent_search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_layout_vertical"
+            android:orientation="vertical">
+            <TextView
+                style="@style/AppTheme.HeaderText"
+                android:text="Recent Search:"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
+
