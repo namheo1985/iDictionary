@@ -76,6 +76,9 @@ public class SearchFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mClearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                if(s.length() <= 0) {
+                    mSuggestedListView.setVisibility(View.GONE);
+                }
                 mSearchText = s.toString();
                 updateAdapter(s.toString());
             }
@@ -85,17 +88,6 @@ public class SearchFragment extends BaseFragment {
 
             }
         });
-
-        mSuggestedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if(mWordsAdapter != null && mWordsAdapter.getCount() > position) {
-                    String word = mWordsAdapter.getItem(position);
-                    lookup(word);
-                }
-            }
-        });
-
     }
 
     private String lookedUpMeaning;
@@ -127,6 +119,12 @@ public class SearchFragment extends BaseFragment {
         task.execute();
     }
 
+    private ArrayAdapter<String> getEmptyAdapter() {
+        String[] emptyString = new String[1];
+        emptyString[0] = "No word found. Please check the spelling.";
+        return new ArrayAdapter<String>(SearchFragment.this.getActivity(), R.layout.list_view_row, emptyString);
+    }
+
     private void updateAdapter(final String key) {
         if(key == null || key.length() <= 0) {
             mSuggestedListView.setVisibility(View.GONE);
@@ -139,12 +137,16 @@ public class SearchFragment extends BaseFragment {
                 Realm realm = Realm.getInstance(SearchFragment.this.getActivity());
                 RealmResults<Word> results = realm.where(Word.class).beginsWith("value", key).findAll();
                 int max = results.size() > 10 ? 10 : results.size();
-                String[] stringResults = new String[max];
-                for(int i = 0; i < max; i++) {
-                    stringResults[i] = results.get(i).getValue();
-                }
-                mWordsAdapter = new ArrayAdapter<String>(SearchFragment.this.getActivity(), R.layout.list_view_row, stringResults);
+                boolean isNotEmpty = max > 0;
+                if(isNotEmpty) {
+                    String[] stringResults = new String[max];
+                    for(int i = 0; i < max; i++) {
+                        stringResults[i] = results.get(i).getValue();
+                    }
+                    mWordsAdapter = new ArrayAdapter<>(SearchFragment.this.getActivity(), R.layout.list_view_row, stringResults);
+                } else mWordsAdapter = getEmptyAdapter();
                 realm.close();
+                initiateClickRowHandler(isNotEmpty);
                 return null;
             }
 
@@ -161,6 +163,24 @@ public class SearchFragment extends BaseFragment {
             }
         });
         task.execute();
+    }
+
+    private void initiateClickRowHandler(boolean activated) {
+        if(activated)
+            mSuggestedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    if(mWordsAdapter != null && mWordsAdapter.getCount() > position) {
+                        String word = mWordsAdapter.getItem(position);
+                        mSearchEditText.setText("");
+                        mSearchEditText.append(word);
+                        lookup(word);
+                    }
+                }
+            });
+        else {
+            mSuggestedListView.setOnItemClickListener(null);
+        }
     }
 
     @Override
