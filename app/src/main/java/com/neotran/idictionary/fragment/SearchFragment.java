@@ -1,19 +1,14 @@
 package com.neotran.idictionary.fragment;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -148,7 +143,7 @@ public class SearchFragment extends BaseFragment {
                 for(int i = 0; i < max; i++) {
                     stringResults[i] = results.get(i).getValue();
                 }
-                mWordsAdapter = new ArrayAdapter<String>(SearchFragment.this.getActivity(), R.layout.autocomplete_item, stringResults);
+                mWordsAdapter = new ArrayAdapter<String>(SearchFragment.this.getActivity(), R.layout.list_view_row, stringResults);
                 realm.close();
                 return null;
             }
