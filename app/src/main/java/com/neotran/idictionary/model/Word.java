@@ -28,5 +28,4 @@ public class Word extends RealmObject {
     public void setValue(String v) {
         value = v;
     }
-
 }

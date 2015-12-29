@@ -32,18 +32,16 @@
             android:orientation="horizontal"
             tools:context="com.neotran.idictionary.fragment.SearchFragment">
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/search_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_gravity="center_vertical"
                 android:layout_toLeftOf="@+id/search_button"
-                android:dropDownVerticalOffset="@dimen/autocomplete_vertical_offset"
                 android:hint="Please enter a word..."
                 android:inputType="textNoSuggestions"
                 android:paddingBottom="@dimen/padding_edittext_bottom"
-                android:popupBackground="@android:color/transparent"
                 android:singleLine="true"
                 android:textSize="@dimen/text_size_large"/>
 
@@ -57,6 +55,19 @@
                 android:text="Search"
                 android:visibility="gone"/>
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ListView
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/margin_element"
+                android:id="@+id/suggested_words_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            </ListView>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/recent_search_view"

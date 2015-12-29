@@ -8,17 +8,22 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 
 import com.neotran.idictionary.R;
 import com.neotran.idictionary.helper.BackgroundTask;
+import com.neotran.idictionary.helper.Noticer;
 import com.neotran.idictionary.helper.SystemHelper;
+import com.neotran.idictionary.model.Meaning;
 import com.neotran.idictionary.model.Word;
 
 import io.realm.Realm;
@@ -26,10 +31,11 @@ import io.realm.RealmResults;
 
 public class SearchFragment extends BaseFragment {
     private String mSearchText = "";
-    private AutoCompleteTextView mSearchEditText;
+    private EditText mSearchEditText;
     private Button mSearchButton;
     private Button mClearButton;
     private View mRecentSearchView;
+    private ListView mSuggestedListView;
     private ArrayAdapter<String> mWordsAdapter;
 
     public SearchFragment() {
@@ -49,9 +55,10 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void initiateMainView(View pMainView) {
         if(pMainView != null) {
-            mSearchEditText = (AutoCompleteTextView) pMainView.findViewById(R.id.search_edit_text);
-            mRecentSearchView = (View) pMainView.findViewById(R.id.recent_search_view);
+            mSearchEditText = (EditText) pMainView.findViewById(R.id.search_edit_text);
+            mRecentSearchView = pMainView.findViewById(R.id.recent_search_view);
             mSearchButton = (Button) pMainView.findViewById(R.id.search_button);
+            mSuggestedListView = (ListView) pMainView.findViewById(R.id.suggested_words_list_view);
         }
     }
 
@@ -66,10 +73,8 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mRecentSearchView.setVisibility(mSearchEditText.getText().length() > 0 ? View.GONE : View.VISIBLE);
-                if(s.length() >= 3) {
-                    updateAdapter(s.toString());
-                }
+                mSearchText = s.toString();
+                updateAdapter(s.toString());
             }
 
             @Override
@@ -78,9 +83,52 @@ public class SearchFragment extends BaseFragment {
             }
         });
 
+        mSuggestedListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(mWordsAdapter != null && mWordsAdapter.getCount() > position) {
+                    String word = mWordsAdapter.getItem(position);
+                    lookup(word);
+                }
+            }
+        });
+
+    }
+
+    private String lookedUpMeaning;
+
+    private void lookup(final String word) {
+        BackgroundTask task = new BackgroundTask();
+        task.setOnTaskWorkListner(new BackgroundTask.OnTaskWorkListner() {
+            @Override
+            public Object onWork(Object... params) {
+                Realm realm = Realm.getInstance(getActivity());
+                Meaning mean = realm.where(Meaning.class).equalTo("value", word).findFirst();
+                lookedUpMeaning = (mean != null) ? mean.getMeaning() : null;
+                realm.close();
+                return null;
+            }
+
+            @Override
+            public Object onComplete(Object param) {
+                if(lookedUpMeaning != null)
+                    Noticer.makeToast(getActivity(), lookedUpMeaning);
+                return null;
+            }
+
+            @Override
+            public Object onProgress(Object... params) {
+                return null;
+            }
+        });
+        task.execute();
     }
 
     private void updateAdapter(final String key) {
+        if(key == null || key.length() <=0) {
+            mSuggestedListView.setVisibility(View.GONE);
+            return;
+        }
         BackgroundTask task = new BackgroundTask();
         task.setOnTaskWorkListner(new BackgroundTask.OnTaskWorkListner() {
             @Override
@@ -99,8 +147,8 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public Object onComplete(Object param) {
-                mSearchEditText.setAdapter(mWordsAdapter);
-                mSearchEditText.showDropDown();
+                mSuggestedListView.setAdapter(mWordsAdapter);
+                mSuggestedListView.setVisibility((mWordsAdapter != null && mWordsAdapter.getCount() > 0) ? View.VISIBLE : View.GONE);
                 return null;
             }
 
@@ -130,8 +178,5 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
-        if(mSearchEditText != null && mWordsAdapter != null && mWordsAdapter.getCount() > 0) {
-            mSearchEditText.showDropDown();
-        }
     }
 }

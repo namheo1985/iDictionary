@@ -1,8 +1,6 @@
 package com.neotran.idictionary;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -18,13 +16,7 @@ import android.view.MenuItem;
 import com.neotran.idictionary.fragment.BaseFragment;
 import com.neotran.idictionary.fragment.SearchFragment;
 import com.neotran.idictionary.helper.BackgroundTask;
-import com.neotran.idictionary.helper.FileHelper;
-import com.neotran.idictionary.model.Word;
-
-import java.io.InputStream;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
+import com.neotran.idictionary.helper.RealmHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BaseFragment.FragmentCallBacker {
@@ -55,8 +47,8 @@ public class MainActivity extends AppCompatActivity
         task.setOnTaskWorkListner(new BackgroundTask.OnTaskWorkListner() {
             @Override
             public Object onWork(Object... params) {
-                FileHelper.createWordsRealmFromTextFile(MainActivity.this, "words.txt");
-
+                RealmHelper.createWordsDatabase(MainActivity.this);
+                // RealmHelper.createMeaningsDatabase(MainActivity.this);
                 return null;
             }
 
