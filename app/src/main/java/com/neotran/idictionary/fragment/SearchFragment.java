@@ -33,7 +33,7 @@ public class SearchFragment extends BaseFragment {
     private String mSearchText = "";
     private EditText mSearchEditText;
     private Button mSearchButton;
-    private Button mClearButton;
+    private ImageButton mClearButton;
     private View mRecentSearchView;
     private ListView mSuggestedListView;
     private ArrayAdapter<String> mWordsAdapter;
@@ -55,6 +55,7 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void initiateMainView(View pMainView) {
         if(pMainView != null) {
+            mClearButton = (ImageButton) pMainView.findViewById(R.id.clear_button);
             mSearchEditText = (EditText) pMainView.findViewById(R.id.search_edit_text);
             mRecentSearchView = pMainView.findViewById(R.id.recent_search_view);
             mSearchButton = (Button) pMainView.findViewById(R.id.search_button);
@@ -65,6 +66,12 @@ public class SearchFragment extends BaseFragment {
     @Override
     public void onLazyLoadingUI(View pMainView) {
         SystemHelper.toggleSoftKeyboardFromView(getActivity(), true);
+        mClearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSearchEditText.setText("");
+            }
+        });
         mSearchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -73,6 +80,7 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mClearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
                 mSearchText = s.toString();
                 updateAdapter(s.toString());
             }
@@ -125,7 +133,7 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void updateAdapter(final String key) {
-        if(key == null || key.length() <=0) {
+        if(key == null || key.length() <= 0) {
             mSuggestedListView.setVisibility(View.GONE);
             return;
         }

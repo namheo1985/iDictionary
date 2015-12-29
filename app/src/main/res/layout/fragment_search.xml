@@ -32,18 +32,32 @@
             android:orientation="horizontal"
             tools:context="com.neotran.idictionary.fragment.SearchFragment">
 
-            <EditText
-                android:id="@+id/search_edit_text"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_gravity="center_vertical"
-                android:layout_toLeftOf="@+id/search_button"
-                android:hint="Please enter a word..."
-                android:inputType="textNoSuggestions"
-                android:paddingBottom="@dimen/padding_edittext_bottom"
-                android:singleLine="true"
-                android:textSize="@dimen/text_size_large"/>
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/search_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/search_button"
+                    android:hint="Please enter a word..."
+                    android:inputType="textNoSuggestions"
+                    android:paddingBottom="@dimen/padding_edittext_bottom"
+                    android:singleLine="true"
+                    android:textSize="@dimen/text_size_large"/>
+
+                <ImageButton
+                    android:id="@+id/clear_button"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_vertical|right"
+                    android:layout_marginBottom="2dp"
+                    android:visibility="gone"
+                    android:background="@drawable/icon_clear"/>
+            </FrameLayout>
 
             <Button
                 android:id="@+id/search_button"
@@ -60,12 +74,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <ListView
-                android:visibility="gone"
-                android:layout_marginTop="@dimen/margin_element"
                 android:id="@+id/suggested_words_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/margin_element"
+                android:visibility="gone">
             </ListView>
         </LinearLayout>
 
