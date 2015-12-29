@@ -13,6 +13,11 @@
     <dimen name="padding_layout_vertical">20dp</dimen>
     <dimen name="padding_edittext_bottom">16dp</dimen>
     <dimen name="margin_element">10dp</dimen>
+    <!-- Autocomplete text edit -->
+    <dimen name="autocomplete_min_height">42dp</dimen>
+    <dimen name="autocomplete_vertical_offset">6dp</dimen>
+    <dimen name="autocomplete_padding_end">4dp</dimen>
+    <dimen name="autocomplete_padding_start">2dp</dimen>
 
     <!-- Text Size -->
     <dimen name="text_size_small">12sp</dimen>
