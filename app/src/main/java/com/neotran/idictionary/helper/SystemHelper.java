@@ -7,36 +7,53 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.neotran.idictionary.R;
+
 /**
  * Created by neotran on 12/28/15.
  */
 public class SystemHelper {
-    private static Handler handler;
+    private static Handler mHANDLER;
+    private static Activity mOnScreenActivity;
 
+    public static Activity getOnScreenActivity() {
+        return mOnScreenActivity;
+    }
+    public static void onScreen(Activity activity) {
+        mOnScreenActivity = activity;
+    }
     public static void recycleDelayed(Runnable runner) {
-        if(handler != null) handler.removeCallbacks(runner);
-        handler = null;
+        if(mHANDLER != null) mHANDLER.removeCallbacks(runner);
+        mHANDLER = null;
     }
 
     public static void postDelayed(Runnable runner, int delayedTime) {
-        handler = new Handler();
-        handler.postDelayed(runner, delayedTime);
+        mHANDLER = new Handler();
+        mHANDLER.postDelayed(runner, delayedTime);
     }
-    public static void toggleSoftKeyboardFromView(final Activity context, boolean openIt) {
-        if(context != null) {
+
+    public static String getText(int idSource) {
+        if(mOnScreenActivity != null)
+            if(mOnScreenActivity.getResources() != null)
+                return mOnScreenActivity.getResources().getString(idSource);
+        return "";
+    }
+
+    public static void toggleSoftKeyboardFromView(boolean openIt) {
+        if(mOnScreenActivity != null) {
             try {
                 if(openIt) {
-                    ((InputMethodManager) context
+                    ((InputMethodManager) mOnScreenActivity
                             .getSystemService(Context.INPUT_METHOD_SERVICE))
                             .toggleSoftInput(InputMethodManager.SHOW_FORCED,
                                     InputMethodManager.HIDE_IMPLICIT_ONLY);
                 } else {
-                    View view = context.getWindow().getCurrentFocus();
+                    View view = mOnScreenActivity.getWindow().getCurrentFocus();
                     if(view != null)
-                        ((InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE))
+                        ((InputMethodManager) mOnScreenActivity.getSystemService(Context.INPUT_METHOD_SERVICE))
                                 .hideSoftInputFromWindow(view.getApplicationWindowToken(), 0);
                     else {
-                        context.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+                        mOnScreenActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
                     }
                 }
 

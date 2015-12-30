@@ -1,5 +1,6 @@
 package com.neotran.idictionary.helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -15,13 +16,14 @@ public class Noticer {
             mToast.cancel();
 
     }
-    public static Toast makeToast(Context ct, String text, int gravity,
-                                  boolean isKeyboardVisible) {
+
+    public static Toast makeToast(String text, int gravity, boolean isKeyboardVisible) {
+        Activity onScreenActivity = SystemHelper.getOnScreenActivity();
         try {
             if(mToast != null) {
                 clearToast();
             }
-            mToast = Toast.makeText(ct, text, Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(onScreenActivity, text, Toast.LENGTH_SHORT);
             int yPos = isKeyboardVisible ? -150 : 0;
             mToast.setGravity(gravity, 0, yPos);
             mToast.show();
@@ -30,15 +32,18 @@ public class Noticer {
         }
         return null;
     }
-    public static Toast makeToast(Context ct, String text, int gravity) {
-        return makeToast(ct, text, gravity, Toast.LENGTH_LONG);
+
+    public static Toast makeToast(String text, int gravity) {
+        return makeToast(text, gravity, Toast.LENGTH_LONG);
     }
-    public static Toast makeToast(Context ct, String text, int gravity, int duration) {
+
+    public static Toast makeToast(String text, int gravity, int duration) {
+        Activity onScreenActivity = SystemHelper.getOnScreenActivity();
         try {
             if(mToast != null) {
                 clearToast();
             }
-            mToast = Toast.makeText(ct, text, Toast.LENGTH_SHORT);
+            mToast = Toast.makeText(onScreenActivity, text, Toast.LENGTH_SHORT);
             mToast.setDuration(duration);
             mToast.setGravity(gravity, 0, 0);
             mToast.show();
@@ -47,7 +52,8 @@ public class Noticer {
         }
         return null;
     }
-    public static Toast makeToast(Context context, String text) {
-        return makeToast(context, text, Gravity.CENTER);
+
+    public static Toast makeToast(String text) {
+        return makeToast(text, Gravity.CENTER);
     }
 }

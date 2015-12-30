@@ -55,8 +55,8 @@
                     android:layout_height="24dp"
                     android:layout_gravity="center_vertical|right"
                     android:layout_marginBottom="2dp"
-                    android:visibility="gone"
-                    android:background="@drawable/icon_clear"/>
+                    android:background="@drawable/icon_clear"
+                    android:visibility="gone"/>
             </FrameLayout>
 
             <Button
@@ -70,22 +70,24 @@
                 android:visibility="gone"/>
         </RelativeLayout>
 
-        <LinearLayout
+        <com.neotran.idictionary.widget.WordView
+            android:id="@+id/word_view"
+            android:layout_marginTop="@dimen/margin_element"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:visibility="gone">
 
-            <ListView
-                android:id="@+id/suggested_words_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_element"
-                android:visibility="gone">
-            </ListView>
-        </LinearLayout>
+        </com.neotran.idictionary.widget.WordView>
+
+        <ListView
+            android:id="@+id/suggested_words_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_element"
+            android:visibility="gone">
+        </ListView>
 
         <LinearLayout
-            android:id="@+id/recent_search_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_layout_vertical"
@@ -96,6 +98,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Recent Search:"/>
+
+            <LinearLayout
+                android:id="@+id/recent_search_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -20,6 +20,7 @@ import com.neotran.idictionary.helper.Noticer;
 import com.neotran.idictionary.helper.SystemHelper;
 import com.neotran.idictionary.model.Meaning;
 import com.neotran.idictionary.model.Word;
+import com.neotran.idictionary.widget.WordView;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -32,7 +33,7 @@ public class SearchFragment extends BaseFragment {
     private View mRecentSearchView;
     private ListView mSuggestedListView;
     private ArrayAdapter<String> mWordsAdapter;
-
+    private WordView mWordView;
     public SearchFragment() {
     }
 
@@ -55,16 +56,20 @@ public class SearchFragment extends BaseFragment {
             mRecentSearchView = pMainView.findViewById(R.id.recent_search_view);
             mSearchButton = (Button) pMainView.findViewById(R.id.search_button);
             mSuggestedListView = (ListView) pMainView.findViewById(R.id.suggested_words_list_view);
+            mWordView = (WordView) pMainView.findViewById(R.id.word_view);
+            mWordView.initiate(getActivity());
         }
     }
 
     @Override
     public void onLazyLoadingUI(View pMainView) {
-        SystemHelper.toggleSoftKeyboardFromView(getActivity(), true);
+        SystemHelper.toggleSoftKeyboardFromView(true);
         mClearButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mSearchEditText.setText("");
+                mSearchEditText.requestFocus();
+                SystemHelper.toggleSoftKeyboardFromView(true);
             }
         });
         mSearchEditText.addTextChangedListener(new TextWatcher() {
@@ -76,8 +81,9 @@ public class SearchFragment extends BaseFragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mClearButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
-                if(s.length() <= 0) {
-                    mSuggestedListView.setVisibility(View.GONE);
+                if(!mSearchText.equals(s.toString())) {
+                    mWordView.setVisibility(View.GONE);
+                    mSuggestedListView.setVisibility(View.VISIBLE);
                 }
                 mSearchText = s.toString();
                 updateAdapter(s.toString());
@@ -85,7 +91,9 @@ public class SearchFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                if(s.length() <= 0) {
+                    mSuggestedListView.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -93,6 +101,12 @@ public class SearchFragment extends BaseFragment {
     private String lookedUpMeaning;
 
     private void lookup(final String word) {
+        mSearchText = word;
+        mWordView.setVisibility(View.VISIBLE);
+        mWordView.updateLayout(mSearchText);
+        mSuggestedListView.setVisibility(View.GONE);
+        SystemHelper.toggleSoftKeyboardFromView(false);
+
         BackgroundTask task = new BackgroundTask();
         task.setOnTaskWorkListner(new BackgroundTask.OnTaskWorkListner() {
             @Override
@@ -107,7 +121,7 @@ public class SearchFragment extends BaseFragment {
             @Override
             public Object onComplete(Object param) {
                 if(lookedUpMeaning != null)
-                    Noticer.makeToast(getActivity(), lookedUpMeaning);
+                    Noticer.makeToast(lookedUpMeaning);
                 return null;
             }
 
@@ -121,8 +135,8 @@ public class SearchFragment extends BaseFragment {
 
     private ArrayAdapter<String> getEmptyAdapter() {
         String[] emptyString = new String[1];
-        emptyString[0] = "No word found. Please check the spelling.";
-        return new ArrayAdapter<String>(SearchFragment.this.getActivity(), R.layout.list_view_row, emptyString);
+        emptyString[0] = SystemHelper.getText(R.string.no_word_found);
+        return new ArrayAdapter<>(SearchFragment.this.getActivity(), R.layout.list_view_row, emptyString);
     }
 
     private void updateAdapter(final String key) {

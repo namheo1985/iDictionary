@@ -17,6 +17,7 @@ import com.neotran.idictionary.fragment.BaseFragment;
 import com.neotran.idictionary.fragment.SearchFragment;
 import com.neotran.idictionary.helper.BackgroundTask;
 import com.neotran.idictionary.helper.RealmHelper;
+import com.neotran.idictionary.helper.SystemHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, BaseFragment.FragmentCallBacker {
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SystemHelper.onScreen(this);
         setContentView(R.layout.activity_main);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

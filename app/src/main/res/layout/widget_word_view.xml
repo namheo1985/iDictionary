@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/word_view_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/word_title_text_view"
+        style="@style/AppTheme.HeaderText"
+        android:text="Vocabulary:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <WebView
+        android:background="@color/lightYellow"
+        android:id="@+id/description_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </WebView>
+</LinearLayout>
